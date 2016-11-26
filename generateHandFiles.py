@@ -1,9 +1,10 @@
 import tkinter as tk
+from tkinter import StringVar, ttk
 import os
 import subprocess
 
 class Application(tk.Frame):
-    def __init__(self, master=None):
+    def __init__(self, master = None):
         tk.Frame.__init__(self, master)
         self.pack()
         self.createWidgets()
@@ -23,6 +24,37 @@ class Application(tk.Frame):
         for line in lineList:                      # loop through each line (element in the list)
             importedFile.write(str(line))          # write the line (element of the list) to the file
         importedFile.close()                    # close the file
+
+    def makeBoM(self, scale, reqTorque):
+        # create blank file and list of lines
+        BoMFile = open('BoM.csv', "w")
+        lineList = []
+
+        # create all lines for BoM
+        lineList.append('Label, Description, Quantity' + '\n')
+        if reqTorque == 'High':
+            lineList.append('Motor 1, 25 oz-in, 1' + '\n')
+            lineList.append('Motor 2, 30 oz-in, 1' + '\n')
+        elif reqTorque == 'Medium':
+            lineList.append('Motor 1, 20 oz-in, 1' + '\n')
+            lineList.append('Motor 2, 25 oz-in, 1' + '\n')
+        elif reqTorque == 'Low':
+            lineList.append('Motor 1, 15 oz-in, 1' + '\n')
+            lineList.append('Motor 2, 20 oz-in, 1' + '\n')
+
+        lineList.append('Cable, 5 in, 1' + '\n')
+        lineList.append('Cable, 4.5 in, 1' + '\n')
+        lineList.append('Cable, 4 in, 1' + '\n')
+        lineList.append('Cable, 3.5 in, 1' + '\n')
+        lineList.append('Cable, 3 in, 1' + '\n')
+        lineList.append('Spring, 10 N/m Torsion, 14' + '\n')
+        lineList.append('Joint Screw, 4-40, 14' + '\n')
+        lineList.append('Joint Nut, 4-40, 14' + '\n')
+
+        # write all lines to files
+        for line in lineList:
+            BoMFile.write(str(line))
+        BoMFile.close()
 
     def makePartFiles(self):
         filePath = os.path.dirname(os.path.abspath(__file__)) + "\SCADtoSTL.bat"
@@ -55,9 +87,12 @@ class Application(tk.Frame):
         self.editText('ring3.scad', valRing3)
 
         # Make STL files ================================================================
-        # display some 'creating stl files dialogue'
+        # display 'creating stl files dialogue'
         self.stSplash['text'] = 'Creating STL Files'
         self.update()
+
+        # make the BoM
+        self.makeBoM(valThumb1,self.torque_box.get())       # edit what the scale value is going to be
 
         # make the files
         p = subprocess.Popen(filePath)
@@ -69,23 +104,24 @@ class Application(tk.Frame):
 
     def createWidgets(self):
         # Static Texts =======================================================================
-        self.stSplash = tk.Label(self, text="Prosthetic Hand STL Generator", font=("Helvetica", 16))
+        self.stSplash = tk.Label(self, text = "Prosthetic Hand STL Generator", font = ("Helvetica", 16))
 
-        self.stthumb1 = tk.Label(self, text="Thumb 1 Length")
-        self.stthumb2 = tk.Label(self, text="Thumb 2 Length")
-        self.stindex1 = tk.Label(self, text="Index 1 Length")
-        self.stindex2 = tk.Label(self, text="Index 2 Length")
-        self.stindex3 = tk.Label(self, text="Index 3 Length")
-        self.stmiddle1 = tk.Label(self, text="Middle 1 Length")
-        self.stmiddle2 = tk.Label(self, text="Middle 2 Length")
-        self.stmiddle3 = tk.Label(self, text="Middle 3 Length")
-        self.string1 = tk.Label(self, text="Ring 1 Length")
-        self.string2 = tk.Label(self, text="Ring 2 Length")
-        self.string3 = tk.Label(self, text="Ring 3 Length")
+        self.stthumb1 = tk.Label(self, text = "Thumb 1 Length")
+        self.stthumb2 = tk.Label(self, text = "Thumb 2 Length")
+        self.stindex1 = tk.Label(self, text = "Index 1 Length")
+        self.stindex2 = tk.Label(self, text = "Index 2 Length")
+        self.stindex3 = tk.Label(self, text = "Index 3 Length")
+        self.stmiddle1 = tk.Label(self, text = "Middle 1 Length")
+        self.stmiddle2 = tk.Label(self, text = "Middle 2 Length")
+        self.stmiddle3 = tk.Label(self, text = "Middle 3 Length")
+        self.string1 = tk.Label(self, text = "Ring 1 Length")
+        self.string2 = tk.Label(self, text = "Ring 2 Length")
+        self.string3 = tk.Label(self, text = "Ring 3 Length")
+        self.sttorque = tk.Label(self, text = "Torque Required")
 
         # Pushbuttons ========================================================================
-        self.pbMakePartFiles = tk.Button(self, text="Generate STL", command=self.makePartFiles)
-        self.pbQuit = tk.Button(self, text="QUIT", fg="red", command=root.destroy)
+        self.pbMakePartFiles = tk.Button(self, text = "Generate STL", command = self.makePartFiles)
+        self.pbQuit = tk.Button(self, text = "QUIT", fg = "red", command = root.destroy)
 
         # Edit Fields ========================================================================
         self.efThumb1 = tk.Entry(self)
@@ -100,41 +136,48 @@ class Application(tk.Frame):
         self.efRing2 = tk.Entry(self)
         self.efRing3 = tk.Entry(self)
 
+        # Option Menu ========================================================================
+        self.torque_box = ttk.Combobox(self, textvariable = StringVar(), state ='readonly')
+        self.torque_box['values'] = ('Low', 'Medium', 'High')
+
         # Arrange Items ======================================================================
-        self.stSplash.grid(row = 0, column = 0, columnspan = 2, sticky='E'+'W')
+        self.stSplash.grid(row = 0, column = 0, columnspan = 2, sticky ='E'+'W')
 
-        self.pbMakePartFiles.grid(row = 1, column = 0, columnspan = 2, sticky='E'+'W')
+        self.pbMakePartFiles.grid(row = 1, column = 0, columnspan = 2, sticky ='E'+'W')
 
-        self.stthumb1.grid(row = 2, column = 0, sticky='E'+'W')
-        self.stthumb2.grid(row = 3, column = 0, sticky='E'+'W')
-        self.stindex1.grid(row = 4, column = 0, sticky='E'+'W')
-        self.stindex2.grid(row = 5, column = 0, sticky='E'+'W')
-        self.stindex3.grid(row = 6, column = 0, sticky='E'+'W')
-        self.stmiddle1.grid(row = 7, column = 0, sticky='E'+'W')
-        self.stmiddle2.grid(row = 8, column = 0, sticky='E'+'W')
-        self.stmiddle3.grid(row = 9, column = 0, sticky='E'+'W')
-        self.string1.grid(row = 10, column = 0, sticky='E'+'W')
-        self.string2.grid(row = 11, column = 0, sticky='E'+'W')
-        self.string3.grid(row = 12, column = 0, sticky='E'+'W')
+        self.stthumb1.grid(row = 2, column = 0, sticky ='E'+'W')
+        self.stthumb2.grid(row = 3, column = 0, sticky ='E'+'W')
+        self.stindex1.grid(row = 4, column = 0, sticky ='E'+'W')
+        self.stindex2.grid(row = 5, column = 0, sticky ='E'+'W')
+        self.stindex3.grid(row = 6, column = 0, sticky ='E'+'W')
+        self.stmiddle1.grid(row = 7, column = 0, sticky ='E'+'W')
+        self.stmiddle2.grid(row = 8, column = 0, sticky ='E'+'W')
+        self.stmiddle3.grid(row = 9, column = 0, sticky ='E'+'W')
+        self.string1.grid(row = 10, column = 0, sticky ='E'+'W')
+        self.string2.grid(row = 11, column = 0, sticky ='E'+'W')
+        self.string3.grid(row = 12, column = 0, sticky ='E'+'W')
+        self.sttorque.grid(row = 13, column = 0, sticky ='E'+'W')
 
-        self.efThumb1.grid(row = 2, column = 1, sticky='E'+'W')
-        self.efThumb2.grid(row = 3, column = 1, sticky='E'+'W')
-        self.efIndex1.grid(row = 4, column = 1, sticky='E'+'W')
-        self.efIndex2.grid(row = 5, column = 1, sticky='E'+'W')
-        self.efIndex3.grid(row = 6, column = 1, sticky='E'+'W')
-        self.efMiddle1.grid(row = 7, column = 1, sticky='E'+'W')
-        self.efMiddle2.grid(row = 8, column = 1, sticky='E'+'W')
-        self.efMiddle3.grid(row = 9, column = 1, sticky='E'+'W')
-        self.efRing1.grid(row = 10, column = 1, sticky='E'+'W')
-        self.efRing2.grid(row = 11, column = 1, sticky='E'+'W')
-        self.efRing3.grid(row = 12, column = 1, sticky='E'+'W')
+        self.efThumb1.grid(row = 2, column = 1, sticky ='E'+'W')
+        self.efThumb2.grid(row = 3, column = 1, sticky ='E'+'W')
+        self.efIndex1.grid(row = 4, column = 1, sticky ='E'+'W')
+        self.efIndex2.grid(row = 5, column = 1, sticky ='E'+'W')
+        self.efIndex3.grid(row = 6, column = 1, sticky ='E'+'W')
+        self.efMiddle1.grid(row = 7, column = 1, sticky ='E'+'W')
+        self.efMiddle2.grid(row = 8, column = 1, sticky ='E'+'W')
+        self.efMiddle3.grid(row = 9, column = 1, sticky ='E'+'W')
+        self.efRing1.grid(row = 10, column = 1, sticky ='E'+'W')
+        self.efRing2.grid(row = 11, column = 1, sticky ='E'+'W')
+        self.efRing3.grid(row = 12, column = 1, sticky ='E'+'W')
 
-        self.pbQuit.grid(row = 13, column = 0, columnspan = 2, sticky='E'+'W')
+        self.torque_box.grid(row = 13, column = 1, sticky ='E'+'W')
 
+        self.pbQuit.grid(row = 14, column = 0, columnspan = 2, sticky ='E'+'W')
 
 
 root = tk.Tk()
-root.title("Prosthetic Hand STL Generator")
+root.title("Hand STL Generator")
 root.iconbitmap('BRicon.ico')
-app = Application(master=root)
+root.resizable(False, False)
+app = Application(master = root)
 app.mainloop()
