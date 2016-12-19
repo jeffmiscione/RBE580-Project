@@ -1,4 +1,4 @@
-thumb_length = 60; middle_length = 80; palm_width = 90;
+thumb_length = 65; middle_length = 80; palm_width = 85;
 
 module palm_1(thumb_length, middle_length, palm_width)
 {
@@ -48,15 +48,15 @@ module palm_1(thumb_length, middle_length, palm_width)
                 //screw extrusion
                 for(i=[0:1:1]){
                     translate([palm_width*(5/85+50/85*i),palm_width*5/85,0])
-                    cylinder(10,r=1.13,false,$fn=50);
+                    cylinder(10,r=3.46/2,false,$fn=50);
                     translate([palm_width*(5/85+50/85*i),palm_width*20/85,0])
-                    cylinder(10,r=1.13,false,$fn=50);
+                    cylinder(10,r=3.46/2,false,$fn=50);
                 }
                 for(i=[0:1:1]){
                     translate([palm_width*(5/85+75/85*i),palm_width*55/85,0])
-                    cylinder(10,r=1.13,false,$fn=50);
+                    cylinder(10,r=3.46/2,false,$fn=50);
                     translate([palm_width*(5/85+75/85*i),palm_width*75/85,0])
-                    cylinder(10,r=1.13,false,$fn=50);
+                    cylinder(10,r=3.46/2,false,$fn=50);
                 }
                 
                 //sliding part extrusion

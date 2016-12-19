@@ -1,4 +1,4 @@
-thumb_length = 60; middle_length = 80; palm_width = 90;
+thumb_length = 65; middle_length = 80; palm_width = 85;
 
 module proximal_phalanx(thumb_length, middle_length, palm_width)
 {
