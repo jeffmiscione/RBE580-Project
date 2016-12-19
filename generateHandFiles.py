@@ -42,11 +42,11 @@ class Application(tk.Frame):
         # motors
         # https://www.servocity.com/90-rpm-micro-gear-motor
         if reqTorque == 'High':
-            lineList.append('Micro Gear Motor, 90 RPM 12V, 2' + '\n')
+            lineList.append('Micro Gear Motor, 90 RPM 12V, 1' + '\n')
         elif reqTorque == 'Medium':
-            lineList.append('Micro Gear Motor, 110 RPM 12V, 2' + '\n')
+            lineList.append('Micro Gear Motor, 110 RPM 12V, 1' + '\n')
         elif reqTorque == 'Low':
-            lineList.append('Micro Gear Motor, 130 RPM 12V, 2' + '\n')
+            lineList.append('Micro Gear Motor, 130 RPM 12V, 1' + '\n')
 
         # motor enclosure
         # https://www.servocity.com/micro-gear-motor-enclosure
@@ -59,7 +59,7 @@ class Application(tk.Frame):
         lineList.append('Nylon Coated Steel Wire (0.58mm), '+ str(float(valMiddle) + 0.50*float(valPalm)) + 'mm, 1\n')    # middle
         lineList.append('Nylon Coated Steel Wire (0.58mm), '+ str(0.85*float(valMiddle) + 0.45*float(valPalm)) + 'mm, 1\n')  # ring
         lineList.append('Nylon Coated Steel Wire (0.58mm), '+ str(0.6*float(valMiddle) + 0.40*float(valPalm)) + 'mm, 1\n')    # pinky
-        lineList.append('Nylon Coated Steel Wire (0.58mm), '+ str(0.50*float(valPalm)) + ', 1\n')    # connector to motor
+        lineList.append('Nylon Coated Steel Wire (0.58mm), '+ str(0.50*float(valPalm)) + 'mm, 1\n')    # connector to motor
 
         # https://www.mcmaster.com/#9271k74/=1594nh2
         lineList.append('0.014" wire diam Spring, 0.075 in*lbs Torsion, 14' + '\n')
@@ -103,8 +103,8 @@ class Application(tk.Frame):
         self.editText('finger_tip.scad', valThumb, valMiddle, valPalm)
         self.editText('middle_phalanx.scad', valThumb, valMiddle, valPalm)
         self.editText('palm_1.scad', valThumb, valMiddle, valPalm)
-        #self.editText('Palm_Cover.scad', valThumb, valMiddle, valPalm)      # need to fix
-        #self.editText('Palm_Pulley.scad', valThumb, valMiddle, valPalm)     # need to fix
+        self.editText('Palm_Cover_modified.scad', valThumb, valMiddle, valPalm)
+        self.editText('Palm_Pulley_modified.scad', valThumb, valMiddle, valPalm)
         self.editText('proximal_phalanx.scad', valThumb, valMiddle, valPalm)
         self.editText('proximal_thumb.scad', valThumb, valMiddle, valPalm)
         self.editText('thumb_tip.scad', valThumb, valMiddle, valPalm)
@@ -137,6 +137,8 @@ class Application(tk.Frame):
         self.stPalm = tk.Label(self, text = "Palm Width (mm)")
         self.stTorque = tk.Label(self, text = "Torque Required")
 
+        self.stPrinter = tk.Label(self, text = "MAKE SURE TO SET 3D PRINTER TO MM UNITS")
+
         # Pushbuttons ========================================================================
         self.pbMakePartFiles = tk.Button(self, text = "Generate STL", command = self.makePartFiles)
         self.pbQuit = tk.Button(self, text = "QUIT", fg = "red", command = root.destroy)
@@ -164,15 +166,18 @@ class Application(tk.Frame):
         self.stThumb.grid(row = 2, column = 0, sticky ='E'+'W')
         self.stMiddle.grid(row = 3, column = 0, sticky ='E'+'W')
         self.stPalm.grid(row = 4, column = 0, sticky ='E'+'W')
-        self.stTorque.grid(row = 5, column = 0, sticky ='E'+'W')
+        self.stTorque.grid(row = 6, column = 0, sticky ='E'+'W')
 
         self.efThumb.grid(row = 2, column = 1, sticky ='E'+'W')
         self.efMiddle.grid(row = 3, column = 1, sticky ='E'+'W')
         self.efPalm.grid(row = 4, column = 1, sticky ='E'+'W')
 
-        self.torque_box.grid(row = 5, column = 1, sticky ='E'+'W')
+        self.stPrinter.grid(row = 5, column = 0, columnspan = 2, sticky ='E'+'W')
 
-        self.pbQuit.grid(row = 6, column = 0, columnspan = 2, sticky ='E'+'W')
+        self.torque_box.grid(row = 6, column = 1, sticky ='E'+'W')
+
+        self.pbQuit.grid(row = 7, column = 0, columnspan = 2, sticky ='E'+'W')
+
 
 root = tk.Tk()
 root.title("Hand STL Generator")
