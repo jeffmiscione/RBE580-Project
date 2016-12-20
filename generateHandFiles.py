@@ -102,9 +102,9 @@ class Application(tk.Frame):
         # do for each part
         self.editText('finger_tip.scad', valThumb, valMiddle, valPalm)
         self.editText('middle_phalanx.scad', valThumb, valMiddle, valPalm)
-        self.editText('palm_1.scad', valThumb, valMiddle, valPalm)
-        self.editText('Palm_Cover_modified.scad', valThumb, valMiddle, valPalm)
-        self.editText('Palm_Pulley_modified.scad', valThumb, valMiddle, valPalm)
+        self.editText('Palm_Back.scad', valThumb, valMiddle, valPalm)
+        self.editText('Palm_Cover.scad', valThumb, valMiddle, valPalm)
+        self.editText('Palm_Pulley.scad', valThumb, valMiddle, valPalm)
         self.editText('proximal_phalanx.scad', valThumb, valMiddle, valPalm)
         self.editText('proximal_thumb.scad', valThumb, valMiddle, valPalm)
         self.editText('thumb_tip.scad', valThumb, valMiddle, valPalm)
